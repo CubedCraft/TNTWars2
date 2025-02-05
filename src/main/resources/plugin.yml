@@ -14,7 +14,7 @@ commands:
   mapmanager:
     description: Edit maps
     usage: Type /mm
-    permission: tntwars.map
+    permission: tntwars.mapmanager
     aliases: [mm]
   team:
     description: Select team
