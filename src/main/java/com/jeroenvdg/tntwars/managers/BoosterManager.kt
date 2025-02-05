@@ -1,6 +1,5 @@
 package com.jeroenvdg.tntwars.managers
 
-import com.cubedcraft.core.Core
 import com.jeroenvdg.tntwars.TNTWars
 import com.jeroenvdg.tntwars.player.TNTWarsPlayer
 import com.jeroenvdg.tntwars.services.boosterService.ActiveBooster
@@ -61,29 +60,26 @@ class BoosterManager {
 
         Soundial.playAll(Soundial.DragonGrowl)
 
-        if (TNTWars.instance.config.discordConfig.enabled) {
-            Scheduler.async {
-                val p = user.bukkitPlayer
-                val req = JsonObject()
-                req.addProperty("action", "message")
-                req.addProperty("channel_id", "171037025347043329")
-                req.addProperty("title", TNTWars.instance.config.discordConfig.tntwarsChannelId)
-                req.addProperty("message", "A one hour booster has been activated by " + p.name + ", enabling triple Score and Coins if you play now!")
-                Core.getInstance().mq.send("bot", req.toString())
-
-                val req2 = JsonObject()
-                req2.addProperty("action", "message")
-                req2.addProperty("channel_id", TNTWars.instance.config.discordConfig.generalChannelId)
-                req2.addProperty("title", "TNTWars Booster has been activated by " + p.name)
-                req2.addProperty("message", "A one hour booster has been activated by " + p.name + ", enabling triple Score and Coins if you play now!")
-                Core.getInstance().mq.send("bot", req2.toString())
-
-                val alert = JsonObject()
-                alert.addProperty("action", "command")
-                alert.addProperty("command", "alert &6&l[&c&lTNTWars&6&l] &aA one hour booster has been activated by &b" + p.name + "&a, enabling triple Score and Coins if you play now on &b/server TNTWars!")
-                Core.getInstance().mq.send("bungee", alert.toString())
-            }
-        }
+//        if (TNTWars.instance.config.discordConfig.enabled) {
+//            Scheduler.async {
+//                val p = user.bukkitPlayer
+//                val req = JsonObject()
+//                req.addProperty("action", "message")
+//                req.addProperty("channel_id", "171037025347043329")
+//                req.addProperty("title", TNTWars.instance.config.discordConfig.tntwarsChannelId)
+//                req.addProperty("message", "A one hour booster has been activated by " + p.name + ", enabling triple Score and Coins if you play now!")
+//
+//                val req2 = JsonObject()
+//                req2.addProperty("action", "message")
+//                req2.addProperty("channel_id", TNTWars.instance.config.discordConfig.generalChannelId)
+//                req2.addProperty("title", "TNTWars Booster has been activated by " + p.name)
+//                req2.addProperty("message", "A one hour booster has been activated by " + p.name + ", enabling triple Score and Coins if you play now!")
+//
+//                val alert = JsonObject()
+//                alert.addProperty("action", "command")
+//                alert.addProperty("command", "alert &6&l[&c&lTNTWars&6&l] &aA one hour booster has been activated by &b" + p.name + "&a, enabling triple Score and Coins if you play now on &b/server TNTWars!")
+//            }
+//        }
 
         return@JobResult Result.success(activeBooster)
     }
