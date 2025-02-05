@@ -1,0 +1,17 @@
+items:
+  PeeCannon:
+    type: CANNON
+    schematic: peecannon
+    name: "Pee Cannon"
+    cost: 50
+    gui-slot: 9
+    gui-item-glow: false
+    gui-item-id: 46
+    gui-description: "&eA small but powerful cannon."
+  BasicCannons:
+    type: DUMMY
+    gui-slot: 9
+    gui-name: "&eBasic Cannons"
+    gui-item-glow: true
+    gui-item-id: 169
+    gui-lore: "&6This row of cannons are basic, but friendly to anyone on a budget."

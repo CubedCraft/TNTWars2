@@ -1,0 +1,68 @@
+serverId: 6
+
+mySQL:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: database
+  username: username
+  password: password
+
+discord:
+  enabled: false
+  tntwars-channel: 429992964358668288
+  general-channel: 171037025347043329
+
+game:
+  matchTime: 1800 # 30 minutes
+  countdownTime: 30
+  tntInDispenser: 288
+
+rewards:
+  win:
+    coins: 50
+    score: 5
+    points: 5
+  kill:
+    coins: 10
+    score: 1
+    points: 5
+  mvp:
+    coins: 20
+    score: 5
+    points: 5
+
+messages:
+  matchStartMessage:
+    - "&7&l&m+---------------(&r &c&lRULES&r &7&l&m)---------------+"
+    - "&cAuto cannons, Team griefing and dying on purpose is"
+    - "&c against the rules and they could lead to a ban"
+    - "&7&l&m+---------------(&r &c&lRULES&r &7&l&m)---------------+"
+  matchStartTitle: "&cAuto cannons are forbidden"
+  matchStartSubtitle: "&cUsing them will result in a ban"
+
+itemSelector:
+  selectorItem: CHEST
+  items:
+    - SMOOTH_BRICK
+    - SMOOTH_STAIRS
+    - STEP
+    - LADDER
+    - FENCE
+    - WATER_BUCKET
+    - DIAMOND_PICKAXE
+    - DIAMOND_AXE
+    - STONE_BUTTON
+    - LEVER
+    - DISPENSER
+    - DIODE
+    - REDSTONE_BLOCK
+    - REDSTONE_TORCH
+    - REDSTONE
+    - PISTON_BASE
+    - PISTON_STICKY_BASE
+    - SLIME_BLOCK
+    - STONE_PLATE
+    - SAND
+    - TRAP_DOOR
+    - SHEARS
