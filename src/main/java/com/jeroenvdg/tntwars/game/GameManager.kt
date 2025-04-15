@@ -104,6 +104,16 @@ class GameManager(val mapManager: MapManager) {
         return true
     }
 
+    fun getTeamLives(team: Team): Int {
+        val state = stateMachine.activeState as? MatchState
+        return state?.getTeamLives(team) ?: 0
+    }
+
+    fun getTimeLeft(): Int {
+        val state = stateMachine.activeState as? MatchState
+        return state?.getTimeLeft() ?: 0;
+    }
+
     fun setTeamSelectMode(mode: TeamSelectMode) {
         if (mode == teamSelectMode) return
         teamSelectMode = mode

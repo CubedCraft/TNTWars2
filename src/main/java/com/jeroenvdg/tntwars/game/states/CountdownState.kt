@@ -4,7 +4,6 @@ import com.jeroenvdg.tntwars.EventBus
 import com.jeroenvdg.tntwars.TNTWars
 import com.jeroenvdg.tntwars.game.Team
 import com.jeroenvdg.tntwars.game.TeamSelectMode
-import com.jeroenvdg.tntwars.managers.ScoreboardManager
 import com.jeroenvdg.tntwars.player.TNTWarsPlayer
 import com.jeroenvdg.tntwars.player.PlayerManager
 import com.jeroenvdg.tntwars.player.gameContexts.SpectatorPlayerContext
@@ -24,10 +23,6 @@ class CountdownState : BaseGameState() {
         EventBus.onPlayerTeamChanged += ::handlePlayerTeamChanged
 
         PlayerManager.instance.updatePlayerVisibility()
-
-        ScoreboardManager.instance.setTime(TNTWars.instance.config.gameConfig.countdownTime)
-        ScoreboardManager.instance.setRedLives(0)
-        ScoreboardManager.instance.setRedLives(0)
     }
 
     override fun onDeactivate() {

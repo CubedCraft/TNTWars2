@@ -103,7 +103,7 @@ class ManagedWorld(val file: File, val worldManager: WorldManager, var world: Wo
     val name = file.name
     val worldName = worldManager.getWorldName(file)
 
-    private val dataFile = File("${file.path}${File.separatorChar}tntwars-data.yml")
+    private val dataFile = File("${file.path}${File.separatorChar}cubed-data.yml")
     private var yamlObject = YamlConfiguration.loadConfiguration(dataFile)
 
 

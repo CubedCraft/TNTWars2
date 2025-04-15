@@ -1,11 +1,9 @@
 package com.jeroenvdg.tntwars.player
 
 import com.jeroenvdg.minigame_utilities.*
-import com.jeroenvdg.minigame_utilities.scoreboard.DisplayBoard
 import com.jeroenvdg.tntwars.EventBus
 import com.jeroenvdg.tntwars.TNTWars
 import com.jeroenvdg.tntwars.game.Team
-import com.jeroenvdg.tntwars.managers.ScoreboardManager
 import com.jeroenvdg.tntwars.managers.achievements.AchievementsManager
 import com.jeroenvdg.tntwars.misc.PlayerDeathContext
 import com.jeroenvdg.tntwars.services.achievements.CompletedAchievement
@@ -56,8 +54,6 @@ class TNTWarsPlayer(player: Player) {
     var teamChatEnabled = false
     var ignoreTeamBounds = false
 
-    val scoreBoard = DisplayBoard(player)
-
     private val stateMachine = PlayerStateMachine(this) // Trust me, exposing this will do more harm than good, if one ever wants to expose this, contact Jeroen!!
     private var cachedDisplayRank: String? = null
 
@@ -72,23 +68,6 @@ class TNTWarsPlayer(player: Player) {
         }
 
     fun init(): Job {
-        scoreBoard
-            .setTitle("&6&lTNTWars &f- [${ScoreboardManager.TIME_PARAM}]")
-            .registerSection("lives", "&6Lives", 10) { it
-                .addLine("&cRed: [${ScoreboardManager.RED_LIVES_PARAM}]")
-                .addLine("&9Blue: [${ScoreboardManager.BLUE_LIVES_PARAM}]")
-                .addLine("")
-            }
-            .registerSection("stats", "&6Stats", 5) {it
-                .addLine("&fWins: &6[${ScoreboardManager.STATS_WINS_PARAM}]")
-                .addLine("&fKills: &6[${ScoreboardManager.STATS_KILLS_PARAM}]")
-                .addLine("&fKillstreak: &6[${ScoreboardManager.STATS_KILLSTREAK_PARAM}]")
-                .addLine("&fCoins: &6[${ScoreboardManager.STATS_COINS_PARAM}]")
-                .addLine("&fScore: &6[${ScoreboardManager.STATS_SCORE_PARAM}]")
-                .addLine("")
-            }
-            .registerSection("ip", "&6cubedcraft.com", -99) {}
-
         return launchCoroutine { scope ->
             val identifierResult = IUserIdentifierService.current().getIdentifier(this)
             identifier = identifierResult.getOrElse {
@@ -131,7 +110,6 @@ class TNTWarsPlayer(player: Player) {
                 throw it
             }.toMutableList()
 
-            updateScoreboard()
             updateUserTab()
             stateMachine.activate()
         }
@@ -155,15 +133,6 @@ class TNTWarsPlayer(player: Player) {
 
     fun updateUserTab() {
         bukkitPlayer.playerListName(Component.text("${getRank()} ${bukkitPlayer.name}").color(team.primaryColor.color))
-    }
-
-    fun updateScoreboard() {
-        scoreBoard.setParam(ScoreboardManager.STATS_WINS_PARAM, stats.wins.toString())
-        scoreBoard.setParam(ScoreboardManager.STATS_KILLS_PARAM, stats.kills.toString())
-        scoreBoard.setParam(ScoreboardManager.STATS_KILLSTREAK_PARAM, stats.killSteak.toString())
-        scoreBoard.setParam(ScoreboardManager.STATS_DEATHS_PARAM, stats.deaths.toString())
-        scoreBoard.setParam(ScoreboardManager.STATS_COINS_PARAM, stats.coins.toString())
-        scoreBoard.setParam(ScoreboardManager.STATS_SCORE_PARAM, stats.score.toString())
     }
 
     fun heal() {

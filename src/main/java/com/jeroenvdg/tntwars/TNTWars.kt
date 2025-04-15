@@ -35,7 +35,6 @@ class TNTWars : JavaPlugin() {
     lateinit var playerManager: PlayerManager private set
     lateinit var guiManager: GUIManager private set
     lateinit var schematicManager: SchematicManager private set
-    lateinit var scoreboardManager: ScoreboardManager private set
     lateinit var playerDeathHelper: PlayerDeathHelper private set
     lateinit var playerStatsManager: PlayerStatsManager private set
     lateinit var boosterManager: BoosterManager private set
@@ -77,7 +76,6 @@ class TNTWars : JavaPlugin() {
         gameManager = GameManager(mapManager)
         guiManager = GUIManager()
         schematicManager = SchematicManager(this)
-        scoreboardManager = ScoreboardManager()
         playerStatsManager = PlayerStatsManager()
         boosterManager = BoosterManager()
         achievementManager = AchievementsManager()
@@ -122,7 +120,6 @@ class TNTWars : JavaPlugin() {
     override fun onDisable() {
         gameManager.deactivate()
         services.dispose()
-        scoreboardManager.dispose()
 
         if (placeholderAPI != null) {
             placeholderAPI!!.unregister()

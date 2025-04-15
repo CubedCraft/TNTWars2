@@ -120,7 +120,6 @@ class PlayerStatsManager {
         user.stats.deaths++
         user.stats.killSteak = 0
         summaryMap[user.identifier]!!.deaths++
-        user.updateScoreboard()
     }
 
     fun addWin(user: TNTWarsPlayer) {
@@ -134,15 +133,11 @@ class PlayerStatsManager {
 
     fun removeCoins(user: TNTWarsPlayer, coins: Int) {
         user.stats.coins -= coins
-        user.updateScoreboard()
     }
 
     fun applyRewards(user: TNTWarsPlayer, reward: RewardConfig, refreshScoreboard: Boolean = true) {
         addScore(user, reward.score * BoosterManager.instance.multiplier)
         addCoins(user, reward.coins * BoosterManager.instance.multiplier)
-        if (refreshScoreboard) {
-            user.run { updateScoreboard() }
-        }
     }
 
     private fun addCoins(user: TNTWarsPlayer, coins: Int) {

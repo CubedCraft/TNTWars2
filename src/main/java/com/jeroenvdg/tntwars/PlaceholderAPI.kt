@@ -1,5 +1,7 @@
 package com.jeroenvdg.tntwars
 
+import com.jeroenvdg.tntwars.game.GameManager
+import com.jeroenvdg.tntwars.game.Team
 import com.jeroenvdg.tntwars.player.PlayerManager
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.entity.Player
@@ -11,12 +13,24 @@ class PlaceholderAPI(val plugin: Plugin) : PlaceholderExpansion() {
 
     init {
         val playerManager = PlayerManager.instance
+        val gameManager = GameManager.instance
+
         placeholders["wins"] = { playerManager.get(it)?.stats?.wins?.toString() ?: "0" }
         placeholders["kills"] = { playerManager.get(it)?.stats?.kills?.toString() ?: "0" }
         placeholders["deaths"] = { playerManager.get(it)?.stats?.deaths?.toString() ?: "0" }
         placeholders["killstreak"] = { playerManager.get(it)?.stats?.killSteak?.toString() ?: "0" }
         placeholders["coins"] = { playerManager.get(it)?.stats?.coins?.toString() ?: "0" }
         placeholders["exp"] = { playerManager.get(it)?.stats?.score?.toString() ?: "0" }
+        placeholders["map"] = { gameManager.activeMap.name }
+        placeholders["lives_red"] = { gameManager.getTeamLives(Team.Red).toString() }
+        placeholders["lives_blue"] = { gameManager.getTeamLives(Team.Blue).toString() }
+        placeholders["time"] = { formatTime(gameManager.getTimeLeft()) }
+    }
+
+    private fun formatTime(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%02d:%02d", minutes, remainingSeconds)
     }
 
     override fun getIdentifier(): String {

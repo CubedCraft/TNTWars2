@@ -10,7 +10,6 @@ import com.jeroenvdg.tntwars.game.GameManager
 import com.jeroenvdg.tntwars.game.MatchEndReason
 import com.jeroenvdg.tntwars.game.Team
 import com.jeroenvdg.tntwars.game.TeamSelectMode
-import com.jeroenvdg.tntwars.managers.ScoreboardManager
 import com.jeroenvdg.tntwars.managers.mapManager.RegionType
 import com.jeroenvdg.tntwars.misc.PlayerDeathContext
 import com.jeroenvdg.tntwars.player.TNTWarsPlayer
@@ -57,9 +56,6 @@ class MatchState : BaseGameState() {
         gameManager.activeMap.startedTime = System.currentTimeMillis()
 
         timeLeft = TNTWars.instance.config.gameConfig.matchTime
-        ScoreboardManager.instance.setTime(timeLeft)
-        ScoreboardManager.instance.setRedLives(teamLives[Team.Red]!!)
-        ScoreboardManager.instance.setBlueLives(teamLives[Team.Blue]!!)
 
         startCoroutine { countdownRoutine() }
         startCoroutine { disableJoinRoutine() }
@@ -77,6 +73,14 @@ class MatchState : BaseGameState() {
         EventBus.onPlayerJoined -= ::handlePlayerJoined
         EventBus.onPlayerLeft -= ::handlePlayerLeft
         EventBus.onAdminGameInfluence -= ::handleGameInfluence
+    }
+
+    fun getTeamLives(team: Team): Int? {
+        return teamLives[team];
+    }
+
+    fun getTimeLeft(): Int {
+        return timeLeft;
     }
 
     private suspend fun countdownRoutine() {
@@ -157,7 +161,6 @@ class MatchState : BaseGameState() {
                 Soundial.playAll(Soundial.Countdown)
             }
 
-            ScoreboardManager.instance.setTime(timeLeft)
         }
 
         gameManager.endMatch(MatchEndReason.TimeLimitReached)
@@ -172,7 +175,6 @@ class MatchState : BaseGameState() {
     private fun handlePlayerDeath(deathContext: PlayerDeathContext) {
         val user = deathContext.user
         teamLives[user.team] = teamLives[user.team]!! - 1
-        ScoreboardManager.instance.setTeamLives(user.team, teamLives[user.team]!!)
         if (teamLives[user.team]!! > 0) return
 
         if (user.team == Team.Blue) {
@@ -209,7 +211,6 @@ class MatchState : BaseGameState() {
                 val team = data[0] as Team
                 val lives = data[1] as Int
                 teamLives[team] = lives
-                ScoreboardManager.instance.setTeamLives(team, teamLives[team]!!)
             }
             InfluenceType.setTimer -> {
                 timeLeft = (data[0] as Int) * 60
