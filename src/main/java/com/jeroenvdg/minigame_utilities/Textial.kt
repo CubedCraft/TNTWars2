@@ -38,10 +38,10 @@ enum class Textial {
 
         val colorMap = HashMap<String, Textial>()
 
-        val summary = TextialParser("", Gold, DarkGray, Red, White)
+        val summary = TextialParser("", Aqua, DarkGray, Red, White)
         val cmd = TextialParser("&cTW &7&l» &r", White, Gold, Red, Gray)
         val bc = TextialParser("", Aqua, Aqua, Red, Green)
-        val msg = TextialParser("", Gold, Yellow, Red, Gray)
+        val msg = TextialParser("", Aqua, Yellow, Red, Gray)
         val bossbar = TextialParser("", Gold, Yellow, Red, White)
         val debug = TextialParser("&f&lDEBUG &7&l» &r", Aqua, Gold, Red, Gray)
 

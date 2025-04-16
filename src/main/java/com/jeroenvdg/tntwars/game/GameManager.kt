@@ -19,13 +19,16 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.Title.Times
 import org.bukkit.Bukkit
+import org.bukkit.event.player.PlayerKickEvent
+import org.bukkit.plugin.Plugin
 import java.time.Duration
 import kotlin.random.Random
 
-class GameManager(val mapManager: MapManager) {
+class GameManager(val mapManager: MapManager, val plugin: Plugin) {
 
     companion object {
         val instance get() = TNTWars.instance.gameManager
+        val config get() = TNTWars.instance.config
     }
 
     var teamSelectMode = TeamSelectMode.None; private set
@@ -100,7 +103,21 @@ class GameManager(val mapManager: MapManager) {
 
         EventBus.onMatchEnded.invoke(matchEndReason)
 
-        stateMachine.gotoState(MatchEndedState::class.java)
+        if (config.gameConfig.tournamentMode.enabled) {
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                for (player in Bukkit.getOnlinePlayers()) {
+                    player.kick(
+                        Textial.msg.format("Thank you for participating in this event!"),
+                        PlayerKickEvent.Cause.WHITELIST
+                    )
+                }
+                Bukkit.setWhitelist(true)
+                stateMachine.gotoState(MatchEndedState::class.java)
+            }, 100L)
+        } else {
+            stateMachine.gotoState(MatchEndedState::class.java)
+        }
+
         return true
     }
 

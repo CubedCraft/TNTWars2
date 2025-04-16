@@ -41,6 +41,12 @@ class GameConfig(section: ConfigurationSection) {
     val matchTime = section.getInt("matchTime", 1800)
     val countdownTime = section.getInt("countdownTime", 30)
     val tntInDispenser = section.getInt("tntInDispenser", 288)
+    val tournamentMode = GameTournamentModeConfig(section.getConfigurationSection("tournamentMode")!!);
+}
+
+class GameTournamentModeConfig(section: ConfigurationSection) {
+    val enabled = section.getBoolean("enabled", false)
+    val lives = section.getInt("lives");
 }
 
 class RewardsConfig(section: ConfigurationSection) {

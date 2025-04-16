@@ -14,6 +14,7 @@ class PlaceholderAPI(val plugin: Plugin) : PlaceholderExpansion() {
     init {
         val playerManager = PlayerManager.instance
         val gameManager = GameManager.instance
+        val config = TNTWars.instance.config
 
         placeholders["wins"] = { playerManager.get(it)?.stats?.wins?.toString() ?: "0" }
         placeholders["kills"] = { playerManager.get(it)?.stats?.kills?.toString() ?: "0" }
@@ -25,6 +26,7 @@ class PlaceholderAPI(val plugin: Plugin) : PlaceholderExpansion() {
         placeholders["lives_red"] = { gameManager.getTeamLives(Team.Red).toString() }
         placeholders["lives_blue"] = { gameManager.getTeamLives(Team.Blue).toString() }
         placeholders["time"] = { formatTime(gameManager.getTimeLeft()) }
+        placeholders["is_tournament"] = { config.gameConfig.tournamentMode.enabled.toString() }
     }
 
     private fun formatTime(seconds: Int): String {

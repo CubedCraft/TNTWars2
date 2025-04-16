@@ -23,6 +23,7 @@ class PlayerStatsManager {
         val instance get() = TNTWars.instance.playerStatsManager
         val winRewards get() = TNTWars.instance.config.rewardConfig.winRewards
         val killRewards get() = TNTWars.instance.config.rewardConfig.killRewards
+        val config get() = TNTWars.instance.config;
     }
 
     private val summaryMap = HashMap<UserIdentifier, PlayerRoundSummary>()
@@ -39,20 +40,48 @@ class PlayerStatsManager {
         EventBus.onPlayerTeamChanged -= ::handlePlayerTeamChanged
     }
 
+    private fun circledNumberUnicode(n: Int): String {
+        return if (n in 1..10) {
+            (0x2775 + n).toChar().toString()
+        } else {
+            n.toString()
+        }
+    }
+
+    fun getMvpColor(index: Int): String {
+        return when (index) {
+            0 -> "&6"
+            1 -> "&7"
+            2 -> "&3"
+            else -> "&8"
+        }
+    }
+
     fun sendRoundSummaries() {
-        val mostValuablePlayer = getMostValuablePlayer()
-        val mvpComponent = Textial.msg.format("&8${Textial.doubleArrowSymbol} &fMVP: &6${mostValuablePlayer?.bukkitPlayer?.name ?: "No one"}")
-        val lineComponent = Textial.msg.format("&7&m+-------&7< &6Round Summary &7>&m-------+")
+        val lineComponent = Textial.msg.format("&7&m        &r &pRound Summary &8&m        &r")
         for ((userIdentifier, summary) in summaryMap) {
             val component = Component.text()
                 .append(lineComponent).appendNewline()
-                .append(mvpComponent).appendNewline()
-                .append(Textial.msg.prefixComp).appendNewline()
-                .append(Textial.msg.format("&8${Textial.doubleArrowSymbol} &fKills: &6${summary.kills}")).appendNewline()
-                .append(Textial.msg.format("&8${Textial.doubleArrowSymbol} &fDeaths: &6${summary.deaths}")).appendNewline()
-                .append(Textial.msg.format("&8${Textial.doubleArrowSymbol} &fCoins: &6${summary.coins}")).appendNewline()
-                .append(Textial.msg.format("&8${Textial.doubleArrowSymbol} &fScore: &6${summary.score}")).appendNewline()
-                .append(lineComponent)
+
+            if(config.gameConfig.tournamentMode.enabled) {
+                val mostValuablePlayers = getMostValuablePlayers(3)
+                for ((index, mvp) in mostValuablePlayers.withIndex()) {
+                    component.append(
+                        Textial.msg.format(" ${getMvpColor(index)}${circledNumberUnicode(index + 1)} &${mvp.team.primaryColor.char}${mvp.bukkitPlayer.name} &7(${summary.kills} kills)")
+                    ).appendNewline()
+                }
+            } else {
+                val mostValuablePlayers = getMostValuablePlayer();
+                component
+                    .append(Textial.msg.format(" &fMatch MVP: &p${mostValuablePlayers?.bukkitPlayer?.name}")).appendNewline()
+                    .append(Textial.msg.format(" ")).appendNewline()
+                    .append(Textial.msg.format(" &fKills: &p${summary.kills}")).appendNewline()
+                    .append(Textial.msg.format(" &fDeaths: &p${summary.deaths}")).appendNewline()
+                    .append(Textial.msg.format(" &fCoins: &p${summary.coins}")).appendNewline()
+                    .append(Textial.msg.format(" &fScore: &p${summary.score}")).appendNewline()
+            }
+
+            component.append(lineComponent)
 
             Bukkit.getPlayer(userIdentifier.uuid)?.sendMessage(component)
         }
@@ -72,6 +101,15 @@ class PlayerStatsManager {
         }
 
         return PlayerManager.instance.get(mostValuablePlayer)!!
+    }
+
+    fun getMostValuablePlayers(amount: Int): List<TNTWarsPlayer> {
+        val availableMVPs = summaryMap.filter { PlayerManager.instance.get(it.key) != null }
+        return availableMVPs
+            .entries
+            .sortedByDescending { it.value.kills }
+            .take(amount)
+            .mapNotNull { (uuid, _) -> PlayerManager.instance.get(uuid) }
     }
 
     fun saveAllUsers(): Job {

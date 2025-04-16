@@ -73,7 +73,7 @@ class TNTWars : JavaPlugin() {
 
         Debug.log("Creating managers")
         playerManager = PlayerManager()
-        gameManager = GameManager(mapManager)
+        gameManager = GameManager(mapManager, this)
         guiManager = GUIManager()
         schematicManager = SchematicManager(this)
         playerStatsManager = PlayerStatsManager()

@@ -17,6 +17,9 @@ game:
   matchTime: 1800 # 30 minutes
   countdownTime: 30
   tntInDispenser: 288
+  tournamentMode:
+    enabled: false
+    lives: 32
 
 rewards:
   win:

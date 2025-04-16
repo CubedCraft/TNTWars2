@@ -25,6 +25,10 @@ import kotlin.math.round
 
 class MatchState : BaseGameState() {
 
+    companion object {
+        val tournamentModeConfig get() = TNTWars.instance.config.gameConfig.tournamentMode;
+    }
+
     override val playerContextProvider = ClassicGameContext.Provider()
     override val teamSelectMode get() = TeamSelectMode.TempDisable
 
@@ -38,10 +42,15 @@ class MatchState : BaseGameState() {
         PlayerManager.instance.updatePlayerVisibility()
 
         val playerCount = Team.Red.usersInTeam().size + Team.Blue.usersInTeam().size
-        maxLives = when {
-            playerCount <= 6 -> 8
-            playerCount <= 10 -> 12
-            else -> 15
+
+        maxLives = if(tournamentModeConfig.enabled) {
+            tournamentModeConfig.lives
+        } else {
+            when {
+                playerCount <= 6 -> 8
+                playerCount <= 10 -> 12
+                else -> 15
+            }
         }
 
         teamLives[Team.Red] = maxLives

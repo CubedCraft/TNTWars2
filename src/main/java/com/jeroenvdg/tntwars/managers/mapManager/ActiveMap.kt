@@ -35,11 +35,11 @@ class ActiveMap(private val mapData: TNTWarsMap, val managedWorld: ManagedWorld)
         }
 
         var mapMessage = Textial.summary.parse(listOf(
-            "&7&l&m+---------------------+",
-            "&s${Textial.doubleArrowSymbol}&r Map: &p${mapData.name}",
-            "&s${Textial.doubleArrowSymbol}&r Made By: &p${mapData.creator}",
-            "&s${Textial.doubleArrowSymbol}&r Gamemode: &p${mapData.gamemodeName}",
-            "&7&l&m+---------------------+",
+            "&7&m                       &r",
+            " &fMap: &p${mapData.name}",
+            " &fMade By: &p${mapData.creator}",
+            " &fGamemode: &p${mapData.gamemodeName}",
+            "&7&m                       &r",
         ))
 
         if (mapData.isExperimental) {
