@@ -17,12 +17,15 @@ import com.jeroenvdg.tntwars.services.userIdentifier.UserIdentifier
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.abs
 
 class TeamSelector : IPlayerGUI {
 
     companion object : GUISingleton<TeamSelector>("TeamSelector") {
+        val config get() = TNTWars.instance.config;
+
         val teamSelectorItem = makeItem(Material.OAK_SIGN) {
             named("&aTeam Selector &7(Right Click)")
             setLore("Click to open the team selector")
@@ -53,6 +56,14 @@ class TeamSelector : IPlayerGUI {
         setLore("Click to select a random team")
     }
 
+    private fun makeDisabledItem(nameProvider: () -> String): ItemStack {
+        return makeItem(Material.BARRIER) {
+            named(nameProvider())
+            setLore("&7Disabled in tournament mode")
+        }
+    }
+
+
     override fun open(player: Player) {
         menu.open(player)
         Soundial.play(player, Soundial.UIOpen)
@@ -61,9 +72,15 @@ class TeamSelector : IPlayerGUI {
     override fun create() {
         teamSelectPreferences.clear()
         menu = HopperMenu("Pick a team") {
-            addButton(0) {
-                displayItem = blueItem
-                onClick { event -> teamButtonClickedHandler(event, Team.Blue) }
+            if(config.gameConfig.tournamentMode.enabled) {
+                addButton(0) {
+                    displayItem = makeDisabledItem { "&9Blue Team" }
+                }
+            } else {
+                addButton(0) {
+                    displayItem = blueItem
+                    onClick { event -> teamButtonClickedHandler(event, Team.Blue) }
+                }
             }
 
             addButton(2) {
@@ -107,9 +124,15 @@ class TeamSelector : IPlayerGUI {
                 }
             }
 
-            addButton(4) {
-                displayItem = redItem
-                onClick { event -> teamButtonClickedHandler(event, Team.Red) }
+            if(config.gameConfig.tournamentMode.enabled) {
+                addButton(4) {
+                    displayItem = makeDisabledItem { "&cRed Team" }
+                }
+            } else {
+                addButton(4) {
+                    displayItem = redItem
+                    onClick { event -> teamButtonClickedHandler(event, Team.Red) }
+                }
             }
         }
     }

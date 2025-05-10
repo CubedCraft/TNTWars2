@@ -14,11 +14,18 @@ import org.bukkit.Bukkit
 
 class CountdownState : BaseGameState() {
 
+    companion object {
+        val config get() = TNTWars.instance.config
+    }
+
     override val playerContextProvider = SpectatorPlayerContext.Provider()
     override val teamSelectMode get() = TeamSelectMode.Queue
 
     override fun onActivate() {
-        startCoroutine { countdownRoutine() }
+        if(!config.gameConfig.tournamentMode.enabled) {
+            startCoroutine { countdownRoutine() }
+        }
+
         EventBus.onPlayerLeft += ::handlePlayerLeft
         EventBus.onPlayerTeamChanged += ::handlePlayerTeamChanged
 

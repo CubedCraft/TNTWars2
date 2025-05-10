@@ -103,12 +103,20 @@ class PlayerStatsManager {
         return PlayerManager.instance.get(mostValuablePlayer)!!
     }
 
-    fun getMostValuablePlayers(amount: Int): List<TNTWarsPlayer> {
+    private fun getMostValuablePlayers(amount: Int): List<TNTWarsPlayer> {
         val availableMVPs = summaryMap.filter { PlayerManager.instance.get(it.key) != null }
         return availableMVPs
             .entries
             .sortedByDescending { it.value.kills }
             .take(amount)
+            .mapNotNull { (uuid, _) -> PlayerManager.instance.get(uuid) }
+    }
+
+    fun getPlayers(): List<TNTWarsPlayer> {
+        return summaryMap
+            .entries
+            .sortedByDescending { it.value.kills }
+            .toList()
             .mapNotNull { (uuid, _) -> PlayerManager.instance.get(uuid) }
     }
 

@@ -1,5 +1,6 @@
 package com.jeroenvdg.tntwars.game
 
+import com.google.gson.JsonObject
 import com.jeroenvdg.minigame_utilities.Debug
 import com.jeroenvdg.minigame_utilities.Soundial
 import com.jeroenvdg.minigame_utilities.Textial
@@ -15,11 +16,11 @@ import com.jeroenvdg.tntwars.managers.mapManager.TNTWarsMap
 import com.jeroenvdg.tntwars.player.PlayerManager
 import com.jeroenvdg.tntwars.player.TNTWarsPlayer
 import com.jeroenvdg.tntwars.services.playerStats.RoundData
+import com.jeroenvdg.tntwars.services.webhookService.IWebhookService
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.Title.Times
 import org.bukkit.Bukkit
-import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.plugin.Plugin
 import java.time.Duration
 import kotlin.random.Random
@@ -103,21 +104,18 @@ class GameManager(val mapManager: MapManager, val plugin: Plugin) {
 
         EventBus.onMatchEnded.invoke(matchEndReason)
 
-        if (config.gameConfig.tournamentMode.enabled) {
-            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-                for (player in Bukkit.getOnlinePlayers()) {
-                    player.kick(
-                        Textial.msg.format("Thank you for participating in this event!"),
-                        PlayerKickEvent.Cause.WHITELIST
-                    )
-                }
-                Bukkit.setWhitelist(true)
-                stateMachine.gotoState(MatchEndedState::class.java)
-            }, 100L)
-        } else {
-            stateMachine.gotoState(MatchEndedState::class.java)
+        if (config.discordConfig.enabled && config.gameConfig.tournamentMode.enabled) {
+            val wh = IWebhookService.current();
+            var message = "Top Players\n"
+
+            for(player in playerStatsManager.getPlayers()) {
+                message += "* ${player.bukkitPlayer.name}: ${player.stats.kills} kills\n"
+            }
+
+            wh.send(message);
         }
 
+        stateMachine.gotoState(MatchEndedState::class.java)
         return true
     }
 

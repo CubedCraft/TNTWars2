@@ -10,8 +10,11 @@ mySQL:
 
 discord:
   enabled: false
+  tntwars-webhook: "<webhook url>"
   tntwars-channel: 429992964358668288
   general-channel: 171037025347043329
+
+
 
 game:
   matchTime: 1800 # 30 minutes

@@ -18,6 +18,8 @@ import com.jeroenvdg.tntwars.services.userIdentifier.SimpleIdService
 import com.jeroenvdg.tntwars.services.vanishService.IPlayerVanishService
 import com.jeroenvdg.tntwars.services.vanishService.SimplePlayerVanishService
 import com.jeroenvdg.minigame_utilities.Debug
+import com.jeroenvdg.tntwars.services.webhookService.DiscordWebhookService
+import com.jeroenvdg.tntwars.services.webhookService.IWebhookService
 import com.zaxxer.hikari.HikariDataSource
 
 
@@ -30,6 +32,7 @@ class ServiceManager {
 
         setService(SimpleIdService(), IUserIdentifierService::class.java)
         setService(SimplePlayerVanishService(), IPlayerVanishService::class.java)
+        setService(DiscordWebhookService(), IWebhookService::class.java);
 
         if (plugin.config.mySQLConfig.enabled) {
             val mySQLConfig = plugin.config.mySQLConfig

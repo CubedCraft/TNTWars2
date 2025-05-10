@@ -35,6 +35,7 @@ class DiscordConfig(section: ConfigurationSection) {
     val enabled = section.getBoolean("enabled", false)
     val tntwarsChannelId = section.getString("tntwars-channel", "")!!
     val generalChannelId = section.getString("general-channel", "")!!
+    val tntwarsWebhookURL = section.getString("tntwars-webhook", "")!!
 }
 
 class GameConfig(section: ConfigurationSection) {
